@@ -16,7 +16,7 @@ public class Card {
         } catch (NumberFormatException e) {
             switch (rank) {
                 case "T": case "J": case "Q": case "K": return 10;
-                case "A": return 1;
+                case "A": return 11;
             }
         }
 

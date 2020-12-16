@@ -45,7 +45,7 @@ public class Blackjack {
 
             int wager = 0;
             do {
-                System.out.println("\nYou currently have " + player.getChips() + " chip(s). How many will you wager?");
+                System.out.println("\nYou currently have " + player.getChips() + " chip(s). How many will you wager? (Must wager at least 1, up to 25 chips)");
                 try {
                     wager = in.nextInt();
                 }
@@ -56,7 +56,7 @@ public class Blackjack {
                 if (wager > player.getChips()) {
                     System.out.println("You don't have that many chips.");
                 }
-            } while (wager <= 0 || wager > player.getChips());
+            } while (wager <= 0 || wager > player.getChips() || wager > 25);
             in.nextLine();
 
             System.out.print("\nYour hand: [");

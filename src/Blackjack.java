@@ -30,6 +30,12 @@ public class Blackjack {
                 deck.remove(0);
             }
 
+
+            for (Card card : deck) {
+                System.out.print(card.getRank() + " ");
+            }
+            System.out.println(deck.size());
+
             System.out.print("\nYour hand: [");
             for (int i = 0; i < player.getHand().size() - 1; i++) {
                 System.out.print(player.getHand().get(i).getRank() + ", ");
@@ -113,6 +119,8 @@ public class Blackjack {
     }
 
     public void takeTurn(boolean cpu) {
+        player.aceDeductionZero();
+        dealer.aceDeductionZero();
         if (!cpu) {
             if (player.addCards() > 21) {
                 for (int i = 0; i < player.getHand().size(); i++) {
@@ -123,7 +131,16 @@ public class Blackjack {
                 }
             }
             System.out.println("Your current card total: " + (player.addCards() - player.getAceDeduction()));
-            player.aceDeductionZero();
+
+            if (player.addCards() - player.getAceDeduction() == 21) {
+                System.out.println("\nCards equal 21, you must stand!"); // Stop hitting because the total equals 21
+                return;
+            }
+            else if (player.addCards() - player.getAceDeduction() > 21) {
+                player.setBust();
+                System.out.println("\nIt's a bust. How pathetic."); // Bust
+                return;
+            }
 
             String hitOrStand = "";
             do {
@@ -141,33 +158,7 @@ public class Blackjack {
                 }
                 System.out.println(player.getHand().get(player.getHand().size() - 1).getRank() + "]");
 
-                if (player.addCards() == 21) {
-                    System.out.println("\nCards equal 21, you must stand!");
-                    return; // Stop hitting because the total equals 21
-                }
-                else if (player.addCards() > 21) {
-                    for (int i = 0; i < player.getHand().size(); i++) {
-                        player.checkAce(player.getHand().get(i));
-                        if (player.addCards() - player.getAceDeduction() == 21) {
-                            System.out.println("\nCards equal 21, you must stand!");
-                            player.aceDeductionZero();
-                            return; // Stop hitting because the total equals 21
-                        }
-                        else if (player.addCards() - player.getAceDeduction() < 21) {
-                            player.aceDeductionZero();
-                            takeTurn(false);
-                        }
-                    }
-                    player.setBust();
-                    System.out.println("\nIt's a bust. How pathetic.");
-                    return; // Bust
-                }
-                else {
-                    takeTurn(false);
-                }
-            }
-            else {
-                return;
+                takeTurn(false);
             }
         }
         else {
@@ -183,7 +174,6 @@ public class Blackjack {
 
             if (dealer.addCards() - dealer.getAceDeduction() >= 17 && dealer.addCards() - dealer.getAceDeduction() <= 21) {
                 System.out.println("\nThe dealer will stand.");
-                return;
             }
             else if (dealer.addCards() - dealer.getAceDeduction() <= 16) {
                 System.out.println("\nThe dealer will hit.");
@@ -199,23 +189,8 @@ public class Blackjack {
                 takeTurn(true);
             }
             else if (dealer.addCards() - dealer.getAceDeduction() > 21) {
-                dealer.aceDeductionZero();
-                for (int i = 0; i < dealer.getHand().size(); i++) {
-                    dealer.checkAce(dealer.getHand().get(i));
-                    if (dealer.addCards() - dealer.getAceDeduction() == 21) {
-                        System.out.println("\nThe dealer stands.");
-                        dealer.aceDeductionZero();
-                        return; // Stop hitting because the total equals 21
-                    }
-                    else if (dealer.addCards() - dealer.getAceDeduction() < 21) {
-                        dealer.aceDeductionZero();
-                        takeTurn(true);
-                    }
-                }
                 dealer.setBust();
-                System.out.println("\nIt's a bust for the dealer.");
-                dealer.aceDeductionZero();
-                return; // Bust
+                System.out.println("\nIt's a bust for the dealer."); // bust
             }
         }
     }

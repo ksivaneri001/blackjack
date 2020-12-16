@@ -255,6 +255,12 @@ public class Blackjack {
     }
 
     public static void main(String[] args) {
+        System.out.println("\u2588\u2588\u2588\u2588\u2588\u2588\u2588");
+        System.out.println("\u2588\u2588    \u2588\u2588\u2588");
+        System.out.println("\u2588\u2588\u2588\u2588\u2588\u2588\u2588");
+        System.out.println("\u2588\u2588    \u2588\u2588\u2588");
+        System.out.println("\u2588\u2588\u2588\u2588\u2588\u2588\u2588 L A C K J A C K");
+        System.out.println("A Human vs. CPU rendition of the classic card game. Put your skills (and your luck) to the test!");
         new Blackjack().game();
     }
 }

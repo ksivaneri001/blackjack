@@ -33,11 +33,11 @@ public class Blackjack {
                 deck.remove(0);
             }
 
-
-            for (Card card : deck) {
-                System.out.print(card.getRank() + " ");
-            }
-            System.out.println(deck.size());
+//            Print statement used for testing code
+//            for (Card card : deck) {
+//                System.out.print(card.getRank() + " ");
+//            }
+//            System.out.println(deck.size());
 
             System.out.print("\nYour hand: [");
             for (int i = 0; i < player.getHand().size() - 1; i++) {
@@ -123,10 +123,10 @@ public class Blackjack {
                 System.out.println("\nIt's a bust. How pathetic."); // Bust
                 return;
             }
-//            else if (deck.size() == 0) {
-//                System.out.println("\nCards equal 21, you must stand!"); // Prevents code from throwing an error
-//                return;
-//            }
+            else if (deck.size() == 0) {
+                System.out.println("\nNo cards are left in the deck, you have to stand."); // Prevents code from throwing an error
+                return;
+            }
 
             String hitOrStand = "";
             do {
@@ -162,6 +162,13 @@ public class Blackjack {
             if (dealer.addCards() - dealer.getAceDeduction() >= 17 && dealer.addCards() - dealer.getAceDeduction() <= 21) {
                 System.out.println("\nThe dealer will stand.");
             }
+            else if (dealer.addCards() - dealer.getAceDeduction() > 21) {
+                dealer.setBust(true);
+                System.out.println("\nIt's a bust for the dealer."); // bust
+            }
+            else if (deck.size() == 0) {
+                System.out.println("\nNo cards are left in the deck, the dealer will stand."); // Prevents code from throwing an error
+            }
             else if (dealer.addCards() - dealer.getAceDeduction() <= 16) {
                 System.out.println("\nThe dealer will hit.");
                 dealer.dealCard(deck.get(0));
@@ -174,10 +181,6 @@ public class Blackjack {
                 System.out.println(dealer.getHand().get(dealer.getHand().size() - 1).getRank() + "]");
 
                 takeTurn(true);
-            }
-            else if (dealer.addCards() - dealer.getAceDeduction() > 21) {
-                dealer.setBust(true);
-                System.out.println("\nIt's a bust for the dealer."); // bust
             }
         }
     }
@@ -196,9 +199,23 @@ public class Blackjack {
     }
 
     public void endGame() {
-        player.clearHand();
-        dealer.clearHand();
-        // reminder to give player back any chips they wagered on the turn the game ended
+        System.out.println("\nThe deck is empty! The game has ended.");
+        System.out.print("\nYou ended with " + player.getChips() + " chips. ");
+        if (player.getChips() == 0) {
+            System.out.println("Better luck next time...");
+        }
+        else if (player.getChips() < player.getInitChips()) {
+            System.out.println("Looks like you lost some money there. Better luck next time!");
+        }
+        else if (player.getChips() == player.getInitChips()) {
+            System.out.println("Looks like you broke even. Not bad, but you can do better.");
+        }
+        else if (player.getChips() >= 2 * player.getInitChips()) {
+            System.out.println("Wow, you more than doubled your original amount! Incredible!");
+        }
+        else if (player.getChips() > player.getInitChips()) {
+            System.out.println("Congratulations! You're leaving with a profit!");
+        }
     }
 
     public static void main(String[] args) {

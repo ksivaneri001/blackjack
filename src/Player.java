@@ -4,12 +4,14 @@ import java.util.List;
 public class Player {
     private final List<Card> hand;
     private int chips;
+    private int initChips;
     private int aceDeduction;
     private boolean bust;
 
     public Player() {
         this.hand = new ArrayList<>();
         this.chips = 0;
+        this.initChips = 0;
         this.aceDeduction = 0;
         this.bust = false;
     }
@@ -20,6 +22,10 @@ public class Player {
 
     public int getChips() {
         return chips;
+    }
+
+    public int getInitChips() {
+        return initChips;
     }
 
     public int getAceDeduction() {
@@ -58,6 +64,10 @@ public class Player {
 
     public void aceDeductionZero() {
         aceDeduction = 0;
+    }
+
+    public void setInitChips(int c) {
+        initChips = c;
     }
 
     public void setBust(boolean b) {

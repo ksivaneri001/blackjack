@@ -256,6 +256,9 @@ public class Blackjack {
         if (playAgain.equals("yes")) {
             game();
         }
+        else {
+            in.close();
+        }
     }
 
     public static void main(String[] args) {

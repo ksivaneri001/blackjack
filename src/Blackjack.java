@@ -22,7 +22,7 @@ public class Blackjack {
 
         short chipsToBuy = 0;
         do {
-            System.out.println("\nHow many chips would you like to buy? (Must be greater than 0 but no more than 32,767)");
+            System.out.println("\nYou have " + player.getChips() + " chip(s). How many chips would you like to buy? (Must be greater than 0 but no more than 32,767)");
             try {
                 chipsToBuy = in.nextShort();
             }
@@ -32,8 +32,8 @@ public class Blackjack {
             }
         } while (chipsToBuy <= 0);
         in.nextLine();
-        player.setInitChips(chipsToBuy);
-        player.setChips(chipsToBuy);
+        player.setInitChips(player.getChips() + chipsToBuy);
+        player.addChips(chipsToBuy);
 
         while (deck.size() >= 4 && player.getChips() > 0) {
             for (int i = 0; i < 2; i++) {
@@ -44,14 +44,14 @@ public class Blackjack {
             }
 
 //            Print statement used for testing code
-//            for (Card card : deck) {
-//                System.out.print(card.getRank() + " ");
-//            }
-//            System.out.println(deck.size());
+            for (Card card : deck) {
+                System.out.print(card.getRank() + " ");
+            }
+            System.out.println(deck.size());
 
             int wager = 0;
             do {
-                System.out.println("\nYou currently have " + player.getChips() + " chips. How many will you wager?");
+                System.out.println("\nYou currently have " + player.getChips() + " chip(s). How many will you wager?");
                 try {
                     wager = in.nextInt();
                 }
@@ -128,7 +128,7 @@ public class Blackjack {
             player.clearHand();
             dealer.clearHand();
             System.out.println("\n#####################");
-            System.out.println("#### -NEXT TURN- ####");
+            System.out.println("#### -NEXT HAND- ####");
             System.out.println("#####################");
         }
 
@@ -220,12 +220,10 @@ public class Blackjack {
     }
 
     public void shuffle() {
-        if (deck == null) {
-            deck = new ArrayList<>(52);
-            for (String rank : RANKS) {
-                for (int i = 0; i < 4; i++) {
-                    deck.add(new Card(rank));
-                }
+        deck = new ArrayList<>(52);
+        for (String rank : RANKS) {
+            for (int i = 0; i < 4; i++) {
+                deck.add(new Card(rank));
             }
         }
 
@@ -251,6 +249,18 @@ public class Blackjack {
         }
         else if (player.getChips() > player.getInitChips()) {
             System.out.println("Congratulations! You're leaving with a profit!");
+        }
+
+        player.clearHand();
+        dealer.clearHand();
+
+        String playAgain = "";
+        do {
+            System.out.println("\nPlay Again? (Yes or No)");
+            playAgain = in.nextLine().toLowerCase();
+        } while (!playAgain.equals("yes") && !playAgain.equals("no"));
+        if (playAgain.equals("yes")) {
+            game();
         }
     }
 

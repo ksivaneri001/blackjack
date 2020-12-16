@@ -70,10 +70,6 @@ public class Player {
         chips += c;
     }
 
-    public void setChips(int c) {
-        chips = c;
-    }
-
     public void setInitChips(int c) {
         initChips = c;
     }

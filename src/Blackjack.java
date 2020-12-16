@@ -20,12 +20,22 @@ public class Blackjack {
     public void game() {
         shuffle();
 
-        while (true) {
-            int payoutMultiplier = 0;
-
-            if (deck.size() < 4) {
-                break;
+        short chipsToBuy = 0;
+        do {
+            System.out.println("\nHow many chips would you like to buy? (Must be greater than 0 but no more than 32,767)");
+            try {
+                chipsToBuy = in.nextShort();
             }
+            catch (Exception e) {
+                chipsToBuy = 0;
+                in.next();
+            }
+        } while (chipsToBuy <= 0);
+        in.nextLine();
+        player.setInitChips(chipsToBuy);
+        player.setChips(chipsToBuy);
+
+        while (deck.size() >= 4 && player.getChips() > 0) {
             for (int i = 0; i < 2; i++) {
                 player.dealCard(deck.get(0));
                 deck.remove(0);
@@ -38,6 +48,22 @@ public class Blackjack {
 //                System.out.print(card.getRank() + " ");
 //            }
 //            System.out.println(deck.size());
+
+            int wager = 0;
+            do {
+                System.out.println("\nYou currently have " + player.getChips() + " chips. How many will you wager?");
+                try {
+                    wager = in.nextInt();
+                }
+                catch (Exception e) {
+                    wager = 0;
+                    in.next();
+                }
+                if (wager > player.getChips()) {
+                    System.out.println("You don't have that many chips.");
+                }
+            } while (wager <= 0 || wager > player.getChips());
+            in.nextLine();
 
             System.out.print("\nYour hand: [");
             for (int i = 0; i < player.getHand().size() - 1; i++) {
@@ -52,7 +78,8 @@ public class Blackjack {
             System.out.println(dealer.getHand().get(dealer.getHand().size() - 1).getRank() + "]");
 
             if (player.addCards() == 21) {
-                System.out.println("\nBlackjack!");
+                System.out.println("\nIt's a Blackjack! You get a 3-2 payout on the " + wager + " chip(s) you wagered!");
+                player.addChips((int) (1.5 * wager));
             }
             else {
                 takeTurn(false);
@@ -74,16 +101,23 @@ public class Blackjack {
                 }
 
                 if (player.getBust()) {
-                    System.out.println("\nYou lose...");
+                    System.out.println("\nYou lose the " + wager + " chip(s) you wagered...");
+                    player.addChips(-1 * wager);
                 }
                 else if (dealer.getBust()) {
-                    System.out.println("\nYou win!");
+                    System.out.println("\nYou win! You get paid back 1 chip for each of the " + wager + " chip(s) you wagered!");
+                    player.addChips(wager);
                 }
                 else if (player.addCards() - player.getAceDeduction() > dealer.addCards() - dealer.getAceDeduction()) {
-                    System.out.println("\nYou win!");
+                    System.out.println("\nYou win! You get paid back 1 chip for each of the " + wager + " chip(s) you wagered!");
+                    player.addChips(wager);
                 }
-                else if (player.addCards() - player.getAceDeduction() <= dealer.addCards() - dealer.getAceDeduction()) {
-                    System.out.println("\nYou lose...");
+                else if (player.addCards() - player.getAceDeduction() < dealer.addCards() - dealer.getAceDeduction()) {
+                    System.out.println("\nYou lose the " + wager + " chip(s) you wagered...");
+                    player.addChips(-1 * wager);
+                }
+                else if (player.addCards() - player.getAceDeduction() == dealer.addCards() - dealer.getAceDeduction()) {
+                    System.out.println("\nIt's a tie. You break even.");
                 }
             }
 
@@ -199,8 +233,10 @@ public class Blackjack {
     }
 
     public void endGame() {
-        System.out.println("\nThe deck is empty! The game has ended.");
-        System.out.print("\nYou ended with " + player.getChips() + " chips. ");
+        String endMessage = (player.getChips() == 0) ? "\nYou lost all your chips. Looks like you can't play anymore." : "\nThe deck is empty! The game has ended.";
+        System.out.println(endMessage);
+
+        System.out.print("\nYou started with " + player.getInitChips() + " chip(s) and ended with " + player.getChips() + " chip(s). ");
         if (player.getChips() == 0) {
             System.out.println("Better luck next time...");
         }

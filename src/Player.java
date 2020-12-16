@@ -66,6 +66,14 @@ public class Player {
         aceDeduction = 0;
     }
 
+    public void addChips(int c) {
+        chips += c;
+    }
+
+    public void setChips(int c) {
+        chips = c;
+    }
+
     public void setInitChips(int c) {
         initChips = c;
     }

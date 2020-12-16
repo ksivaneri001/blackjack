@@ -43,12 +43,6 @@ public class Blackjack {
                 deck.remove(0);
             }
 
-//            Print statement used for testing code
-            for (Card card : deck) {
-                System.out.print(card.getRank() + " ");
-            }
-            System.out.println(deck.size());
-
             int wager = 0;
             do {
                 System.out.println("\nYou currently have " + player.getChips() + " chip(s). How many will you wager?");

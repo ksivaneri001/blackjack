@@ -48,6 +48,15 @@ public class Blackjack {
             else {
                 takeTurn(false);
 
+                player.aceDeductionZero();
+                if (player.addCards() > 21) {
+                    for (int i = 0; i < player.getHand().size(); i++) {
+                        player.checkAce(player.getHand().get(i));
+                        if (player.addCards() - player.getAceDeduction() <= 21) {
+                            break;
+                        }
+                    }
+                }
                 if (player.addCards() - player.getAceDeduction() <= 21) {
                     System.out.print("\nDealer's hand: [");
                     for (int i = 0; i < dealer.getHand().size() - 1; i++) {
@@ -77,6 +86,12 @@ public class Blackjack {
                     }
                 }
 
+                if (player.addCards() - player.getAceDeduction() <= 21) {
+                    System.out.println("\nYour total is: " + (player.addCards() - player.getAceDeduction()));
+                    System.out.println("compared to");
+                    System.out.println("The dealer's total of: " + (dealer.addCards() - dealer.getAceDeduction()));
+                }
+
                 if (player.addCards() - player.getAceDeduction() > 21) {
                     System.out.println("\nYou lose...");
                 }
@@ -91,11 +106,13 @@ public class Blackjack {
                 }
             }
 
+            player.aceDeductionZero();
+            dealer.aceDeductionZero();
+            player.clearHand();
+            dealer.clearHand();
             System.out.println("\n#####################");
             System.out.println("#### -NEXT TURN- ####");
             System.out.println("#####################");
-            player.clearHand();
-            dealer.clearHand();
         }
     }
 
@@ -166,7 +183,6 @@ public class Blackjack {
                 }
             }
             System.out.println("Dealer's current card total: " + (dealer.addCards() - dealer.getAceDeduction()));
-            dealer.aceDeductionZero();
 
             if (dealer.addCards() - dealer.getAceDeduction() >= 17 && dealer.addCards() - dealer.getAceDeduction() <= 21) {
                 System.out.println("\nThe dealer will stand.");
@@ -176,9 +192,17 @@ public class Blackjack {
                 System.out.println("\nThe dealer will hit.");
                 dealer.dealCard(deck.get(0));
                 deck.remove(0);
+
+                System.out.print("\nDealer's hand: [");
+                for (int i = 0; i < dealer.getHand().size() - 1; i++) {
+                    System.out.print(dealer.getHand().get(i).getRank() + ", ");
+                }
+                System.out.println(dealer.getHand().get(dealer.getHand().size() - 1).getRank() + "]");
+
                 takeTurn(true);
             }
             else if (dealer.addCards() - dealer.getAceDeduction() > 21) {
+                dealer.aceDeductionZero();
                 for (int i = 0; i < dealer.getHand().size(); i++) {
                     dealer.checkAce(dealer.getHand().get(i));
                     if (dealer.addCards() - dealer.getAceDeduction() == 21) {

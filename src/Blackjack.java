@@ -23,6 +23,9 @@ public class Blackjack {
         while (true) {
             int payoutMultiplier = 0;
 
+            if (deck.size() < 4) {
+                break;
+            }
             for (int i = 0; i < 2; i++) {
                 player.dealCard(deck.get(0));
                 deck.remove(0);
@@ -64,25 +67,6 @@ public class Blackjack {
                     takeTurn(true);
                 }
 
-                player.aceDeductionZero();
-                dealer.aceDeductionZero();
-                if (player.addCards() > 21) {
-                    for (int i = 0; i < player.getHand().size(); i++) {
-                        player.checkAce(player.getHand().get(i));
-                        if (player.addCards() - player.getAceDeduction() <= 21) {
-                            break;
-                        }
-                    }
-                }
-                if (dealer.addCards() > 21) {
-                    for (int i = 0; i < dealer.getHand().size(); i++) {
-                        dealer.checkAce(dealer.getHand().get(i));
-                        if (dealer.addCards() - dealer.getAceDeduction() <= 21) {
-                            break;
-                        }
-                    }
-                }
-
                 if (!player.getBust() && !dealer.getBust()) {
                     System.out.println("\nYour total is: " + (player.addCards() - player.getAceDeduction()));
                     System.out.println("compared to");
@@ -95,9 +79,6 @@ public class Blackjack {
                 else if (dealer.getBust()) {
                     System.out.println("\nYou win!");
                 }
-                else if (dealer.addCards() - dealer.getAceDeduction() > 21) {
-                    System.out.println("\nYou win!");
-                }
                 else if (player.addCards() - player.getAceDeduction() > dealer.addCards() - dealer.getAceDeduction()) {
                     System.out.println("\nYou win!");
                 }
@@ -106,8 +87,8 @@ public class Blackjack {
                 }
             }
 
-            player.resetBust();
-            dealer.resetBust();
+            player.setBust(false);
+            dealer.setBust(false);
             player.aceDeductionZero();
             dealer.aceDeductionZero();
             player.clearHand();
@@ -116,12 +97,13 @@ public class Blackjack {
             System.out.println("#### -NEXT TURN- ####");
             System.out.println("#####################");
         }
+
+        endGame();
     }
 
     public void takeTurn(boolean cpu) {
-        player.aceDeductionZero();
-        dealer.aceDeductionZero();
         if (!cpu) {
+            player.aceDeductionZero();
             if (player.addCards() > 21) {
                 for (int i = 0; i < player.getHand().size(); i++) {
                     player.checkAce(player.getHand().get(i));
@@ -137,10 +119,14 @@ public class Blackjack {
                 return;
             }
             else if (player.addCards() - player.getAceDeduction() > 21) {
-                player.setBust();
+                player.setBust(true);
                 System.out.println("\nIt's a bust. How pathetic."); // Bust
                 return;
             }
+//            else if (deck.size() == 0) {
+//                System.out.println("\nCards equal 21, you must stand!"); // Prevents code from throwing an error
+//                return;
+//            }
 
             String hitOrStand = "";
             do {
@@ -162,6 +148,7 @@ public class Blackjack {
             }
         }
         else {
+            dealer.aceDeductionZero();
             if (dealer.addCards() > 21) {
                 for (int i = 0; i < dealer.getHand().size(); i++) {
                     dealer.checkAce(dealer.getHand().get(i));
@@ -189,7 +176,7 @@ public class Blackjack {
                 takeTurn(true);
             }
             else if (dealer.addCards() - dealer.getAceDeduction() > 21) {
-                dealer.setBust();
+                dealer.setBust(true);
                 System.out.println("\nIt's a bust for the dealer."); // bust
             }
         }
@@ -206,6 +193,12 @@ public class Blackjack {
         }
 
         Collections.shuffle(deck);
+    }
+
+    public void endGame() {
+        player.clearHand();
+        dealer.clearHand();
+        // reminder to give player back any chips they wagered on the turn the game ended
     }
 
     public static void main(String[] args) {

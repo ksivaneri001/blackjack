@@ -60,11 +60,7 @@ public class Player {
         aceDeduction = 0;
     }
 
-    public void setBust() {
-        bust = true;
-    }
-
-    public void resetBust() {
-        bust = false;
+    public void setBust(boolean b) {
+        bust = b;
     }
 }

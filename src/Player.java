@@ -5,11 +5,13 @@ public class Player {
     private final List<Card> hand;
     private int chips;
     private int aceDeduction;
+    private boolean bust;
 
     public Player() {
         this.hand = new ArrayList<>();
         this.chips = 0;
         this.aceDeduction = 0;
+        this.bust = false;
     }
 
     public List<Card> getHand() {
@@ -22,6 +24,10 @@ public class Player {
 
     public int getAceDeduction() {
         return aceDeduction;
+    }
+
+    public boolean getBust() {
+        return bust;
     }
 
     public void dealCard(Card card) {
@@ -52,5 +58,13 @@ public class Player {
 
     public void aceDeductionZero() {
         aceDeduction = 0;
+    }
+
+    public void setBust() {
+        bust = true;
+    }
+
+    public void resetBust() {
+        bust = false;
     }
 }

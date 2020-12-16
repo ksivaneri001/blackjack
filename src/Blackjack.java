@@ -48,16 +48,7 @@ public class Blackjack {
             else {
                 takeTurn(false);
 
-                player.aceDeductionZero();
-                if (player.addCards() > 21) {
-                    for (int i = 0; i < player.getHand().size(); i++) {
-                        player.checkAce(player.getHand().get(i));
-                        if (player.addCards() - player.getAceDeduction() <= 21) {
-                            break;
-                        }
-                    }
-                }
-                if (player.addCards() - player.getAceDeduction() <= 21) {
+                if (!player.getBust()) {
                     System.out.print("\nDealer's hand: [");
                     for (int i = 0; i < dealer.getHand().size() - 1; i++) {
                         System.out.print(dealer.getHand().get(i).getRank() + ", ");
@@ -86,14 +77,17 @@ public class Blackjack {
                     }
                 }
 
-                if (player.addCards() - player.getAceDeduction() <= 21) {
+                if (!player.getBust() && !dealer.getBust()) {
                     System.out.println("\nYour total is: " + (player.addCards() - player.getAceDeduction()));
                     System.out.println("compared to");
                     System.out.println("The dealer's total of: " + (dealer.addCards() - dealer.getAceDeduction()));
                 }
 
-                if (player.addCards() - player.getAceDeduction() > 21) {
+                if (player.getBust()) {
                     System.out.println("\nYou lose...");
+                }
+                else if (dealer.getBust()) {
+                    System.out.println("\nYou win!");
                 }
                 else if (dealer.addCards() - dealer.getAceDeduction() > 21) {
                     System.out.println("\nYou win!");
@@ -106,6 +100,8 @@ public class Blackjack {
                 }
             }
 
+            player.resetBust();
+            dealer.resetBust();
             player.aceDeductionZero();
             dealer.aceDeductionZero();
             player.clearHand();
@@ -162,6 +158,7 @@ public class Blackjack {
                             takeTurn(false);
                         }
                     }
+                    player.setBust();
                     System.out.println("\nIt's a bust. How pathetic.");
                     return; // Bust
                 }
@@ -215,6 +212,7 @@ public class Blackjack {
                         takeTurn(true);
                     }
                 }
+                dealer.setBust();
                 System.out.println("\nIt's a bust for the dealer.");
                 dealer.aceDeductionZero();
                 return; // Bust

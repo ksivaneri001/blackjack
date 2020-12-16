@@ -16,7 +16,6 @@ public class Player {
         return hand;
     }
 
-
     public int getChips() {
         return chips;
     }
@@ -27,6 +26,12 @@ public class Player {
 
     public void dealCard(Card card) {
         hand.add(card);
+    }
+
+    public void clearHand() {
+        for (int i = 0; i < hand.size(); i++) {
+            hand.remove(i);
+        }
     }
 
     public int addCards() {
@@ -43,5 +48,9 @@ public class Player {
         if (card.getRank().equals("A")) {
             aceDeduction += 10;
         }
+    }
+
+    public void aceDeductionZero() {
+        aceDeduction = 0;
     }
 }
